@@ -1,34 +1,69 @@
+Skip to content
+This repository  
+Search
+Pull requests
+Issues
+Gist
+ @sswapnesh
+ Watch 56
+  Star 43
+  Fork 103 OCA/connector-magento
+ Code  Issues 30  Pull requests 28  Wiki  Pulse  Graphs
+Branch: 8.0 Find file Copy pathconnector-magento/.travis.yml
+9e77745  on Jul 15, 2015
+@guewen guewen Activate container-based travis builds
+3 contributors @guewen @gurneyalex @yvaucher
+RawBlameHistory    54 lines (44 sloc)  1.73 KB
+sudo: false
+
+addons:
+  apt:
+    packages:
+      - expect-dev  # provides unbuffer utility
+      - python-lxml # because pip installation is slow
+
 language: python
 
 python:
   - "2.7"
 
-addons:
-  apt:
-    packages:
-      - expect-dev # provides unbuffer utility
-      - python-lxml # because pip installation is slow
-      - python-xlrd
+cache:
+  - pip
+  - apt
 
 env:
-  - VERSION="8.0" LINT_CHECK="1"
-  - VERSION="8.0" ODOO_REPO="odoo/odoo" LINT_CHECK="0"
-  - VERSION="8.0" ODOO_REPO="OCA/OCB" LINT_CHECK="0"
-  - VERSION="8.0" UNIT_TEST="1" LINT_CHECK="0"
+  matrix:
+  - LINT_CHECK="1"
+  - ODOO_REPO="odoo/odoo" TESTS="1"
+  - ODOO_REPO="OCA/OCB" TESTS="1"
+  - TRANSIFEX="1" TRANSIFEX_USER='transbot@odoo-community.org'
+  - DOCS="1"
+  global:
+  - VERSION="8.0" TESTS="0" LINT_CHECK="0" TRANSIFEX="0" DOCS="0"
+    # Token for Travis docs builds generated with:
+    # $ travis encrypt GH_TOKEN=xxxxxxx -r OCA/connector-magento
+    # Where xxxxxxx  is the GitHub token which needs only the 'public_repo'
+    # right.
+  - secure: "TnjU16HLTgYnFbz1HFh+neF1aIcIMXI5ScRffBbLjWMuycNqyuCBTHzpvdxp/Q61gij+3gbCGkwLkyzNncF66KryFUonPGSu+Wx4WMzp0LJDjoYdeDTlzGBF76W3WKfw0irg9m3zJAGK0X7Uu8Wr5nTRpxkc/8ymA8QC4uEr1Gs="
+    # transifex
+  - secure: "Xz7T0VxkKKDcVNNMc12G9ovclcJGsXvF302B+16HDR90AT9yWjI3KX26kotsYes/7GB+sFLSdBKQ5n+WzMRqPo0AlKSQYl25Srf9UOH9BZQp2G9/U25y1olQiwY08x3EX98/ErHD+lh9ZnIglpLJ2MAwNiJ8ahKdfc19xlYIYo0="
 
 virtualenv:
   system_site_packages: true
 
 install:
-  - git clone https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
+  - git clone --depth=1 https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
   - travis_install_nightly
-  - sudo pip install python-ldap lxml
+  - pip install sphinx sphinx_bootstrap_theme sphinx-intl odoo-sphinx-autodoc
   - printf '[options]\n\nrunning_env = dev' > ${HOME}/.openerp_serverrc
-  - ln -s server_environment_files_sample ./server_environment_files
 
 script:
-  - travis_run_tests
+  - if [ "$DOCS" != "1" ] ; then travis_run_tests; fi
+  - if [ "$DOCS" == "1" ] ; then ./.travis_build_doc; fi
 
 after_success:
-  coveralls
+  - if [ "$DOCS" != "1" ] ; then travis_after_test_success; fi
+  - if [ "$DOCS" == "1" ] ; then ./.travis_push_doc; fi
+Status API Training Shop Blog About Pricing
+© 2016 GitHub, Inc. Terms Privacy Security Contact Help
