@@ -49,5 +49,3 @@ script:
 after_success:
   - if [ "$DOCS" != "1" ] ; then travis_after_test_success; fi
   - if [ "$DOCS" == "1" ] ; then ./.travis_push_doc; fi
-Status API Training Shop Blog About Pricing
-© 2016 GitHub, Inc. Terms Privacy Security Contact Help
