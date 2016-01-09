@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+            <!-- form view -->
+            <record id="view_student_form" model="ir.ui.view">
+                <field name="name">student.form</field>
+                <field name="model">student.student</field>
+                <field name="arch" type="xml">
+                    <form string="Student">
+                        <header>
+<!--                             <button name="register" states="draft" type="object" string="Register" class="oe_highlight"/> -->
+<!--                             <button name="confirm" states="register" type="object" string="Confirm" class="oe_highlight"/> -->
+<!--                             <button name="cancel" states="register,confirm" type="object" string="Cancel" class="oe_highlight"/> -->
+<!--                             <button name="%(action_wiz_calc_age)d" string="Calculate Age (Action)" type="action"/> -->
+<!--                             <button name="action_calc_age" string="Calculate Age (Object)" type="object"/> -->
+                            <button name="new_confirm" string="Confirm" states="draft" type="workflow" class="oe_highlight"/>
+                            <button name="confirm_register" string="Register" states="confirm" type="workflow" class="oe_highlight"/>
+                            <button name="register_done" string="Done" states="register" type="workflow" class="oe_highlight"/>
+<!--                             <button name="register_reject" string="Reject" states="register" type="workflow"/> -->
+                            <button name="reject" string="Reject" states="register" type="object"/>
+                            <button name="register_cancel" string="Cancel" states="register" type="workflow"/>
+                            <button name="confirm_cancel" string="Cancel" states="confirm" type="workflow"/>
+                            <button name="cancel_draft" string="Set to Draft" states="cancel" type="workflow" class="oe_highlight"/>
+                            <field name="state" widget="statusbar" statusbar_visible="draft,confirm,register,done"/>
+                        </header>
+                        <sheet>
+                        <h1>
+                            <label string="Number "/>
+                            <field name="student_number" class="oe_inline" readonly="1"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="name" required="1"/>
+                                <field name="gender"/>
+                                <field name="address_id"/>
+                                <field name="email"/>
+                                <field name="contact"/>
+                                <field name="course_id"/>
+                                <field name="accepted"/>
+                                <field name="type" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="image" widget="image" class="oe_avatar"/>
+                                <field name="dob"/>
+                                <field name="age" attrs="{'invisible':[('dob','=',False)], 'required':[('dob','!=',False)]}"/>
+                                <!-- 'readonly':[('dob','!=',False)]-->
+                                <field name="test_float"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="General Information">
+                                <field name="reference_ids">
+                                    <!-- Internal tree and form views-->
+                                    <tree string="Reference">
+                                        <field name="name"/>
+                                        <field name="contact"/>
+                                        <field name="email"/>
+                                    </tree>
+                                    <form string="Reference">
+                                        <group colspan="4" col="4">
+                                            <field name="name"/>
+                                            <field name="contact"/>
+                                            <field name="email"/>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Personal Info.">
+                                <field name="hobbies_ids"/>
+                            </page>
+                            <page string="Internal Note">
+                                <separator string="Internal Note"/>
+                                <field name="note"/>
+                            </page>
+                        </notebook>
+                        <separator string="Address"/>
+                        <field name="address" placeholder="Write address here..."/>
+                        </sheet>
+                    </form>
+                </field>
+            </record>
+
+            <record id="view_student_tree" model="ir.ui.view">
+                <field name="name">student.tree</field>
+                <field name="model">student.student</field>
+                <field name="arch" type="xml">
+                    <tree string="Student" colors="red:state=='cancel';green:state=='confirm';blue:state=='register'">
+                        <field name="student_number"/>
+                        <field name="name"/>
+                        <field name="email"/>
+                        <field name="contact"/>
+                        <field name="dob"/>
+                        <field name="accepted"/>
+                        <field name="state"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record id="view_student_student_calendar" model="ir.ui.view">
+                <field name="name">Student Calendar</field>
+                <field name="model">student.student</field>
+                <field name="arch" type="xml">
+                    <calendar string="Meetings" date_start="dob" date_stop="dob" color="test_float">
+                        <field name="name"/>
+                        <field name="email"/>
+                        <field name="state"/>
+                    </calendar>
+                </field>
+            </record>
+
+            <record id="view_student_student_graph" model="ir.ui.view">
+                <field name="name">Student Calendar</field>
+                <field name="model">student.student</field>
+                <field name="arch" type="xml">
+                    <graph string="Graph" type="bar">
+                        <field name="name"/>
+                        <field name="test_float" operator="+"/>
+                    </graph>
+                </field>
+            </record>
+
+            <record id="view_student_search" model="ir.ui.view">
+                <field name="name">student.search</field>
+                <field name="model">student.student</field>
+                <field name="arch" type="xml">
+                    <search string="Student">
+                        <field name="student_number"/>
+                        <field name="name"/>
+                        <field name="dob"/>
+                        <filter domain="[('accepted','=',True)]" string="Accepted" help="Accepted"/>
+                        <group expand="0" string="Group By">
+                            <filter name="by_date" string="Date of Birth" context="{'group_by':'dob'}"/>
+                            <filter name="by_status" string="Status" context="{'group_by':'state'}"/>
+                        </group>
+                    </search>
+                </field>
+            </record>
+
+        <record id="action_student" model="ir.actions.act_window">
+            <field name="name">Student</field>
+            <field name="res_model">student.student</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">calendar,graph,tree,form</field>
+            <field name="context">{'default_type':'student'}</field>
+            <field name="domain">[('type','=','student')]</field>
+            <!--<field name="view_id" ref="view_student_tree"/>-->
+        </record>
+
+        <!-- To Open specific form view from action -->
+        <record id="actions_form_view_of_student" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="2"/>
+            <field name="view_id" ref="view_student_form"/>
+            <field name="act_window_id" ref="action_student"/>
+        </record>
+        <record id="actions_tree_view_of_student" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1"/>
+            <field name="view_id" ref="view_student_tree"/>
+            <field name="act_window_id" ref="action_student"/>
+        </record>
+
+        <menuitem id="menu_school_root" name="School Management System"/>
+        <menuitem id="menu_student_main" name="Student" parent="menu_school_root"/>
+        <menuitem id="menu_student" parent="menu_student_main" action="action_student"/>
+
+
+
+         <!-- Faculty form view -->
+        <record id="view_faculty_form" model="ir.ui.view">
+            <field name="name">faculty.form.view</field>
+            <field name="model">student.student</field>
+            <field name="arch" type="xml">
+                <form string="Faculty">
+                    <sheet>
+                    <h1>
+                        <label string="Faculty Number "/>
+                        <field name="student_number" class="oe_inline" readonly="1"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="name" required="1"/>
+                            <field name="gender"/>
+                            <field name="address_id"/>
+                            <field name="email"/>
+                            <field name="contact"/>
+                            <field name="type" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="image" widget="image" class="oe_avatar"/>
+                            <field name="dob"/>
+                            <field name="age"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="General Information">
+                            <field name="reference_ids">
+                                <!-- Internal tree and form views-->
+                                <tree string="Reference">
+                                    <field name="name"/>
+                                    <field name="contact"/>
+                                    <field name="email"/>
+                                </tree>
+                                <form string="Reference">
+                                    <group colspan="4" col="4">
+                                        <field name="name"/>
+                                        <field name="contact"/>
+                                        <field name="email"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Personal Info.">
+                            <field name="hobbies_ids"/>
+                        </page>
+                    </notebook>
+                    <separator string="Address"/>
+                    <field name="address" placeholder="Write address here..."/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Faculty Tree view-->
+        <record id="view_faculty_tree" model="ir.ui.view">
+            <field name="name">faculty.tree.view</field>
+            <field name="model">student.student</field>
+            <field name="arch" type="xml">
+                <tree string="Faculty">
+                    <field name="student_number" string="Faculty Number"/>
+                    <field name="name"/>
+                    <field name="email"/>
+                    <field name="contact"/>
+                    <field name="dob"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!-- Action for Faculty -->
+        <record id="action_faculty" model="ir.actions.act_window">
+            <field name="name">Faculty</field>
+            <field name="res_model">student.student</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_type':'faculty'}</field>
+            <field name="domain">[('type','=','faculty')]</field>
+            <field name="view_id" ref="view_faculty_tree"/>
+        </record>
+
+        <record id="actions_form_view_of_faculty" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="2"/>
+            <field name="view_id" ref="view_faculty_form"/>
+            <field name="act_window_id" ref="action_faculty"/>
+        </record>
+
+        <record id="actions_tree_view_of_faculty" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1"/>
+            <field name="view_id" ref="view_faculty_tree"/>
+            <field name="act_window_id" ref="action_faculty"/>
+        </record>
+
+        <!-- Menu item for faculty -->
+        <menuitem id="menu_faculty" parent="menu_student_main" action="action_faculty"/>
+
+    </data>
+</openerp>

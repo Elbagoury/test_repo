@@ -1,0 +1,3 @@
+id,address,address_id/id,age,dob,email,test_float,gender,name,type
+20,,,5,,sdf@sdf.com,,Male,Test A,Student
+21,,,30,1984-08-30,example@abc.com,500,Female,Test B,Student

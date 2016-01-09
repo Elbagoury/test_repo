@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <!-- Student Audit Log form view -->
+        <record id="student_audit_log_form" model="ir.ui.view">
+            <field name="name">student.audit.log.form</field>
+            <field name="model">student.audit.log</field>
+            <field name="arch" type="xml">
+                <form string="Student Audit Log" create="false" edit="false" delete="false">
+                    <group>
+                        <field name="student_id"/>
+                        <field name="date"/>
+                        <field name="status"/>
+                        <field name="user_id" string="By"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Student Audit Log tree view -->
+        <record id="student_audit_log_tree" model="ir.ui.view">
+            <field name="name">student.audit.log.tree</field>
+            <field name="model">student.audit.log</field>
+            <field name="arch" type="xml">
+                <tree string="Student Audit Log" create="false" edit="false" delete="false">
+                    <field name="student_id"/>
+                    <field name="date"/>
+                    <field name="status"/>
+                    <field name="user_id" string="By"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!-- Action for Audit log -->
+        <record id="action_student_audit_log" model="ir.actions.act_window">
+            <field name="name">Student Audit Log</field>
+            <field name="res_model">student.audit.log</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_reports" name="Reports" parent="menu_school_root"/>
+        <menuitem id="menu_student_audit_log" parent="menu_reports" action="action_student_audit_log"/>
+
+
+    </data>
+</openerp>

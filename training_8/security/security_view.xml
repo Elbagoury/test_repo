@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+    
+    	<record id="school_access_categ" model="ir.module.category">
+    		<field name="name">School</field>
+    	</record>
+
+		<record id="student_access_group" model="res.groups">
+			<field name="name" >Student</field>
+			<field name="help">Group For Student</field>
+			<field name="category_id" ref="school_access_categ"/>
+		</record>
+		
+		
+		<record id="faculty_access_group" model="res.groups">
+			<field name="name" >Faculty</field>
+			<field name="help">Group For Faculty</field>
+			<field name="implied_ids" eval="[(4,ref('student_access_group'))]"/>
+			<field name="category_id" ref="school_access_categ"/> 
+		</record>
+		
+		
+		
+    </data>
+</openerp>
