@@ -1,6 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_student_user_student,access_student_user,model_student_student,student_access_group,1,1,1,0
-access_faculty_user_faculty,access_faculty_user,model_student_student,faculty_access_group,1,1,1,1
-access_partner_user_student,access_partner_student_user,base.model_res_partner,student_access_group,1,1,1,0
-access_partner_user_faculty,access_partner_faculty_user,base.model_res_partner,faculty_access_group,1,1,1,1
-access_audit_log_user_faculty,access_audit_log_faculty_user,model_student_student,student_access_group,1,1,1,0
