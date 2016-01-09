@@ -10,3 +10,19 @@ class res_partner(models.Model):
     def dummy_test(self):
         print "\n\n@@@@@@@@@###################testing from Partner"
         return True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+sddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
