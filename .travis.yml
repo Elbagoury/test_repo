@@ -1,19 +1,3 @@
-Skip to content
-This repository  
-Search
-Pull requests
-Issues
-Gist
- @sswapnesh
- Watch 56
-  Star 43
-  Fork 103 OCA/connector-magento
- Code  Issues 30  Pull requests 28  Wiki  Pulse  Graphs
-Branch: 8.0 Find file Copy pathconnector-magento/.travis.yml
-9e77745  on Jul 15, 2015
-@guewen guewen Activate container-based travis builds
-3 contributors @guewen @gurneyalex @yvaucher
-RawBlameHistory    54 lines (44 sloc)  1.73 KB
 sudo: false
 
 addons:
